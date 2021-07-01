@@ -5,8 +5,6 @@ from django.contrib.auth.decorators import login_required
 
 from .models import MyUser
 
-# Create your views here.
-
 
 def register(request):
     if request.user.is_authenticated:
@@ -30,15 +28,15 @@ def register(request):
         message = "User registered successfully"
         # Send message saying user got registered sucessfully
         return redirect("login")
-        
+
     else:
-        return render("loginSys/register.html")
+        return render(request, "loginSys/register.html")
 
 
 def _login(request):
 
     if request.user.is_authenticated:
-            return redirect('main')
+        return redirect('main')
 
     if request.method == "POST":
 
@@ -48,12 +46,12 @@ def _login(request):
 
         if user is not None:
             login(request, user)
-            redirect("main")
+            return redirect("main")
         else:
-            return render("loginSys/login.html", context={'error': 'Invalid Password'})
+            return render(request, "loginSys/login.html", context={'error': 'Invalid Password'})
 
     else:
-        return render("loginSys/login.html")
+        return render(request, "loginSys/login.html")
 
 
 def _logout(request):

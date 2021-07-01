@@ -4,7 +4,11 @@
 
 {% block content %}
 
-    <h1>Welcome to the website</h1>
-    <a href="#">Logout</a>
+    <h1 class="d-flex justify-content-center">Welcome to the website</h1>
+    <form action="{% url 'logout' %}" method="POST">
+        {% csrf_token %}
+        <button class="btn btn-primary">Logout</button>
+
+    </form>
 
 {% endblock %}

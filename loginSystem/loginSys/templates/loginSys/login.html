@@ -4,6 +4,25 @@
 
 {% block content %}
 
-    <h1>Login here</h1>
+    <h1 class="d-flex justify-content-center p-5">Login here</h1>
+
+    <div class="container p-5">
+        <form action="{% url 'login' %}" method="POST">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="formGroupExampleInput" class="form-label">Username</label>
+                <input type="text" name="username" class="form-control" id="formGroupExampleInput" placeholder="Example input placeholder">
+            </div>
+
+            <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" id="exampleInputPassword1">
+            </div>
+    
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+    </div>
 
 {% endblock %}
