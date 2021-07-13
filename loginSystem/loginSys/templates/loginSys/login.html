@@ -10,10 +10,10 @@
         <form action="{% url 'login' %}" method="POST">
             {% csrf_token %}
 
-            <div class="mb-3">
+            <!-- <div class="mb-3">
                 <label for="formGroupExampleInput" class="form-label">Username</label>
-                <input type="text" name="username" class="form-control" id="formGroupExampleInput" placeholder="Example input placeholder">
-            </div>
+                <input type="text" name="username" class="form-control" id="formGroupExampleInput" placeholder="Username">
+            </div> -->
 
             <div class="mb-3">
                 <label for="exampleInputPassword1" class="form-label">Password</label>
@@ -22,6 +22,16 @@
     
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
+
+        <form action="{% url 'login' %}" method="POST">
+            {% csrf_token %}
+
+            {{ loginform }}
+            
+    
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
 
     </div>
 

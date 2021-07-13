@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
 from .models import MyUser
+from .forms import loginForm
 
 
 def register(request):
@@ -51,7 +52,7 @@ def _login(request):
             return render(request, "loginSys/login.html", context={'error': 'Invalid Password'})
 
     else:
-        return render(request, "loginSys/login.html")
+        return render(request, "loginSys/login.html", context={'loginform': loginForm()})
 
 
 def _logout(request):
