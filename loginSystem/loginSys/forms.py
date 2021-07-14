@@ -1,22 +1,26 @@
 from django import forms
+from .models import MyUser
 
 
-class registerForm(forms.Form):
-    first_name = forms.CharField(label="First Name")
-    last_name = forms.CharField(label="Last Name")
-    username = forms.CharField(label="Username")
-    email = forms.EmailField(label="Email")
-    password = forms.CharField(widget=forms.PasswordInput)
-    password_confirm = forms.CharField(widget=forms.PasswordInput)
+class registerForm(forms.ModelForm):
+
+    class Meta:
+        model = MyUser
+        fields = ['first_name', 'last_name', 'username', 'password', 'email']
 
 
 class loginForm(forms.Form):
-    username = forms.CharField(label="Username")
-    password = forms.CharField(widget=forms.PasswordInput())
+    username = forms.CharField(label="Username", required=True)
+    password = forms.CharField(widget=forms.PasswordInput(), required=True)
 
     username.widget.attrs.update({
         'class': 'form-control',
         'name': 'username',
-        'id': 'formGroupExampleInput',
         'placeholder': 'Username'
+    })
+
+    password.widget.attrs.update({
+        'class': 'form-control',
+        'name': 'password',
+        'placeholder': 'Password'
     })

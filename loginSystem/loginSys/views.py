@@ -4,12 +4,15 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
 from .models import MyUser
-from .forms import loginForm
+from .forms import loginForm, registerForm
 
 
 def register(request):
     if request.user.is_authenticated:
             return redirect("main")
+
+    register_form = registerForm()
+    context = {'register_form': register_form}
 
     if request.method == "POST":
 
@@ -31,7 +34,7 @@ def register(request):
         return redirect("login")
 
     else:
-        return render(request, "loginSys/register.html")
+        return render(request, "loginSys/register.html", context=context)
 
 
 def _login(request):
@@ -39,20 +42,28 @@ def _login(request):
     if request.user.is_authenticated:
         return redirect('main')
 
+    login_form = loginForm(auto_id="id_for_%s", label_suffix=": ")
+    context = {"login_form": login_form}
+
     if request.method == "POST":
 
-        username    = request.POST['username']
-        password    = request.POST['password']
-        user        = authenticate(request, username=username, password=password)
+        login_form = loginForm(request.POST)
 
-        if user is not None:
-            login(request, user)
-            return redirect("main")
-        else:
-            return render(request, "loginSys/login.html", context={'error': 'Invalid Password'})
+        if login_form.is_valid():
+
+            username    = login_form.cleaned_data.get('username')
+            password    = login_form.cleaned_data.get('password')
+            user        = authenticate(request, username=username, password=password)
+
+            if user is not None:
+                login(request, user)
+                return redirect("main")
+            else:
+                context['error'] = "Invalid username or password"
+                return render(request, "loginSys/login.html", context=context, status=401)
 
     else:
-        return render(request, "loginSys/login.html", context={'loginform': loginForm()})
+        return render(request, "loginSys/login.html", context=context)
 
 
 def _logout(request):
