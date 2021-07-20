@@ -43,7 +43,6 @@ def _login(request):
         return redirect('main')
 
     login_form = loginForm(auto_id="id_for_%s", label_suffix=": ")
-    context = {"login_form": login_form}
 
     if request.method == "POST":
 
@@ -59,11 +58,14 @@ def _login(request):
                 login(request, user)
                 return redirect("main")
             else:
-                context['error'] = "Invalid username or password"
+                context = {
+                    'login_form': login_form,
+                    'error_authentication': "Invalid username or password"
+                    }
                 return render(request, "loginSys/login.html", context=context, status=401)
 
-    else:
-        return render(request, "loginSys/login.html", context=context)
+    context = {"login_form": login_form}
+    return render(request, "loginSys/login.html", context=context)
 
 
 def _logout(request):

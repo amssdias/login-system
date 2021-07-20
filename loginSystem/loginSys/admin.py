@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import MyUser, Title
+from .models import MyUser
 from django.contrib.auth.admin import UserAdmin  # To hash the password
 
 
@@ -12,12 +12,3 @@ class CustomMyUser(UserAdmin):
         }),
     )
 
-
-@admin.register(Title)
-class CustomMyUser(admin.ModelAdmin):
-    # fields = [field.name for field in Title._meta.get_fields()]
-    fieldsets = (
-        ("Create your first title", {
-            'fields': ('title', 'description')
-        }),
-    )

@@ -24,6 +24,19 @@
 
             {% endfor %}
             
+            {% if error_authentication %}
+                <div>
+                    {{ error_authentication }}
+                </div>
+            {% endif %}
+
+            {% for error in login_form.non_field_errors %}
+            <!-- Form errors -->
+                <div>
+                    {{ error }}
+                </div>
+            {% endfor %}
+            
     
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
