@@ -4,37 +4,28 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
 from .models import MyUser
-from .forms import loginForm, registerForm
+from .forms import LoginForm, RegisterForm
 
 
 def register(request):
     if request.user.is_authenticated:
             return redirect("main")
 
-    register_form = registerForm()
-    context = {'register_form': register_form}
+    register_form = RegisterForm()
 
     if request.method == "POST":
 
-        username            = request.POST['username']
-        first_name          = request.POST['first_name']
-        last_name           = request.POST['last_name']
-        password            = request.POST['password']
-        password_confirm    = request.POST['password_confirm']
-        email               = request.POST['email']
+        register_form = RegisterForm(request.POST)
+        
+        if register_form.is_valid():
+            register_form.save()
 
-        if password != password_confirm:
-            pass
+            message = "User registered successfully, we have sent an email to confirm!"
+            # Send message saying user got registered sucessfully
+            return redirect("login")
 
-        new_user = MyUser(username=username, first_name=first_name,
-                          last_name=last_name, password=password, email=email)
-        new_user.save()
-        message = "User registered successfully"
-        # Send message saying user got registered sucessfully
-        return redirect("login")
-
-    else:
-        return render(request, "loginSys/register.html", context=context)
+    context = {'register_form': register_form}
+    return render(request, "loginSys/register.html", context=context)
 
 
 def _login(request):
@@ -42,11 +33,11 @@ def _login(request):
     if request.user.is_authenticated:
         return redirect('main')
 
-    login_form = loginForm(auto_id="id_for_%s", label_suffix=": ")
+    login_form = LoginForm(auto_id="id_for_%s", label_suffix=": ")
 
     if request.method == "POST":
 
-        login_form = loginForm(request.POST)
+        login_form = LoginForm(request.POST)
 
         if login_form.is_valid():
 
