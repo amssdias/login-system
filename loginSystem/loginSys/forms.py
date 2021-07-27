@@ -1,6 +1,9 @@
+from django.core import validators
+from django.core.validators import EmailValidator
 from django import forms
 from .models import MyUser
-    
+
+
 
 class RegisterForm(forms.ModelForm):
     first_name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))
@@ -17,43 +20,50 @@ class RegisterForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data            = super().clean()
-        first_name              = self.cleaned_data.get("first_name") or ''
-        last_name               = self.cleaned_data.get("last_name") or ''
-        username                = self.cleaned_data.get("username") or ''
-        password                = self.cleaned_data.get("password") or ''
-        password_confirmation   = self.cleaned_data.get("password_confirmation") or ''
-        email                   = self.cleaned_data.get("email") or ''
+        password                = self.cleaned_data.get("password") or 1
+        password_confirmation   = self.cleaned_data.get("password_confirmation") or 2
 
-        if not len(first_name) or not len(last_name):
-            raise forms.ValidationError("You should provide first and last name!")
-        if not len(username):
-            raise forms.ValidationError("You should provide some username!")
-        if not len(password) or not len(password_confirmation) or len(password) < 8:
-            raise forms.ValidationError("Password must be 8 characters minimum")
-        if not len(email):
-            raise forms.ValidationError("You should provide some email!")
         if password != password_confirmation:
-            raise forms.ValidationError("Passwords don't match!")
+            raise forms.ValidationError("Passwords don't match!", code='Invalid password confirmation.')
 
 
     def clean_first_name(self):
         first_name = self.cleaned_data.get("first_name")
+        if not first_name:
+            raise forms.ValidationError("You should provide a first name!", code='No first name.')
         return first_name.capitalize()
     
     def clean_last_name(self):
         last_name = self.cleaned_data.get("last_name")
+        if not last_name:
+            raise forms.ValidationError("You should provide a last name!", code='No last name.')
         return last_name.capitalize()
+    
+    def clean_username(self):
+        username = self.cleaned_data.get("username")
+        if not username:
+            raise forms.ValidationError("Must have a username.", code="No username.") 
+        return username
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        if '@gmail.com' not in email:
-            raise forms.ValidationError("Email must be 'gmail'.")
+        if "gmail.com" not in email:
+            raise forms.ValidationError("Email must be gmail.")
+        email_name = email.split("@")
+        if len(email_name) < 2:
+            raise forms.ValidationError("Email must be valid. (At least 2 characters)", code='Invalid email name.')
         return email
+
+    def clean_password(self):
+        password = self.cleaned_data.get("password")
+        if len(password) < 8:
+            raise forms.ValidationError("Password must be 8 characters minimum", code='Invalid password length.')
+        return password
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField(label="Username", required=False)
-    password = forms.CharField(widget=forms.PasswordInput(), required=False)
+    username = forms.CharField(label="Username")
+    password = forms.CharField(widget=forms.PasswordInput())
 
     username.widget.attrs.update({
         'class': 'form-control',
@@ -73,7 +83,7 @@ class LoginForm(forms.Form):
         username        = cleaned_data.get("username")
         password        = cleaned_data.get("password")
 
-        if not len(username):
+        if not username:
             raise forms.ValidationError("You should provide some username")
-        elif not len(password):
+        elif not password:
             raise forms.ValidationError("You should provide some password")

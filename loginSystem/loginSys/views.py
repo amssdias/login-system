@@ -23,6 +23,10 @@ def register(request):
             message = "User registered successfully, we have sent an email to confirm!"
             # Send message saying user got registered sucessfully
             return redirect("login")
+        else:
+            context = {'register_form': register_form}
+            return render(request, "loginSys/register.html", context=context, status=400)
+
 
     context = {'register_form': register_form}
     return render(request, "loginSys/register.html", context=context)
