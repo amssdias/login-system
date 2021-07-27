@@ -1,27 +1,6 @@
-from django.test import TestCase, SimpleTestCase, Client
-from django.urls import reverse, resolve
-from loginSys.views import register, _login, _logout, main
+from django.test import TestCase, Client
+from django.urls import reverse
 from loginSys.models import MyUser
-
-# Create your tests here.
-class TestUrls(SimpleTestCase):
-
-    def test_login_url_resolves(self):
-        url = reverse('login')
-        self.assertEqual(resolve(url).func, _login)
-    
-    def test_logout_url_resolves(self):
-        url = reverse('logout')
-        self.assertEqual(resolve(url).func, _logout)
-    
-    def test_register_url_resolves(self):
-        url = reverse('register')
-        self.assertEqual(resolve(url).func, register)
-    
-    def test_main_url_resolves(self):
-        url = reverse('main')
-        self.assertEqual(resolve(url).func, main)
-
 
 class TestViews(TestCase):
 
@@ -66,7 +45,6 @@ class TestViews(TestCase):
             'password_confirmation': 'elizeu',
             'username': 'elizeucugi'
         }, secure=True)
-
         self.assertEqual(response_error.status_code, 400)
         self.assertEqual(MyUser.objects.count(), 1)
 
@@ -78,7 +56,6 @@ class TestViews(TestCase):
             'password_confirmation': 'elizeuelizeu',
             'username': 'elizeucugi'
         }, secure=True)
-
         self.assertEqual(response.status_code, 302)
         self.assertEqual(MyUser.objects.count(), 2)
     
@@ -89,5 +66,4 @@ class TestViews(TestCase):
             'username': 'andre',
             'password': 'dias1234567',
         })
-
         self.assertEqual(response.status_code, 302)
