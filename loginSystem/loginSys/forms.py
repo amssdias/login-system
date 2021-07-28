@@ -78,12 +78,14 @@ class LoginForm(forms.Form):
     })
 
 
-    def clean(self):
-        cleaned_data    = super().clean()
-        username        = cleaned_data.get("username")
-        password        = cleaned_data.get("password")
-
+    def clean_username(self):
+        username = self.cleaned_data.get("username")
         if not username:
             raise forms.ValidationError("You should provide some username")
-        elif not password:
+        return username
+
+    def clean_password(self):
+        password = self.cleaned_data.get('password')
+        if not password:
             raise forms.ValidationError("You should provide some password")
+        return password
