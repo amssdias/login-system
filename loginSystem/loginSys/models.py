@@ -8,10 +8,10 @@ class MyUser(AbstractUser):
     age = models.IntegerField(verbose_name="Insert your age", blank=True, null=True)
     email = models.EmailField(_('email address'), blank=True, unique=True)
 
-    def capitalize(self):
+    def capitalize_names(self):
         self.first_name = self.first_name.capitalize()
         self.last_name = self.last_name.capitalize()
 
     def save(self, *args, **kwargs):
-        self.capitalize()
+        self.capitalize_names()
         super(AbstractUser, self).save(*args, **kwargs)
