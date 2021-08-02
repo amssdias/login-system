@@ -1,8 +1,20 @@
+from django.contrib.auth.forms import PasswordResetForm
 from django.core import validators
 from django.core.validators import EmailValidator
 from django import forms
 from .models import MyUser
 
+
+class UserPasswordResetForm(PasswordResetForm):
+    email = forms.EmailField(
+        label="Email",
+        max_length=254,
+        widget=forms.EmailInput(attrs={
+            'autocomplete': 'email',
+            'class': 'form-control',
+            'placeholder': 'email'
+            })
+    )
 
 
 class RegisterForm(forms.ModelForm):
@@ -17,7 +29,6 @@ class RegisterForm(forms.ModelForm):
         model = MyUser
         fields = ['first_name', 'last_name', 'username', 'email', 'password']
 
-
     def clean(self):
         cleaned_data            = super().clean()
         password                = self.cleaned_data.get("password") or 1
@@ -25,7 +36,6 @@ class RegisterForm(forms.ModelForm):
 
         if password != password_confirmation:
             raise forms.ValidationError("Passwords don't match!", code='Invalid password confirmation.')
-
 
     def clean_first_name(self):
         first_name = self.cleaned_data.get("first_name")
@@ -76,7 +86,6 @@ class LoginForm(forms.Form):
         'name': 'password',
         'placeholder': 'Password'
     })
-
 
     def clean_username(self):
         username = self.cleaned_data.get("username")
