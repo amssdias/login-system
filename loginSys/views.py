@@ -18,8 +18,10 @@ def register(request):
         register_form = RegisterForm(request.POST)
         
         if register_form.is_valid():
-            register_form.save()
-
+            user = register_form.save(commit=False)
+            user.is_active = False
+            user.save()
+            
             message = "User registered successfully, we have sent an email to confirm!"
             # Send message saying user got registered sucessfully
             return redirect("login")
