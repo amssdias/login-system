@@ -2,8 +2,11 @@
 *.log
 *.pot
 *.pyc
-__pycache__/
+__pycache__
 db.sqlite3
+
+# Backup files # 
+*.bak
 
 # Unit test / coverage reports
 htmlcov/
@@ -25,4 +28,11 @@ cover/
 .venv
 env/
 venv/
-/.vscode
+
+# Visual Studio Code # 
+.vscode/
+.vscode/settings.json 
+.vscode/tasks.json 
+.vscode/launch.json 
+.vscode/extensions.json 
+.history
