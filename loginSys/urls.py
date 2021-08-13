@@ -8,6 +8,7 @@ urlpatterns = [
     path('logout/', views._logout, name="logout"),
     path('register/', views.register, name="register"),
     path('main/', views.main, name="main"),
+    path('activate_account/<uidb64>/<token>', views.activate_account, name="activate_account"),
 
     # Link to confirm email to reset
     path('password_reset', auth_views.PasswordResetView.as_view(template_name="password_reset/password_reset_form.html", email_template_name="password_reset/password_reset_email.html", form_class=UserPasswordResetForm), name='password_reset'),

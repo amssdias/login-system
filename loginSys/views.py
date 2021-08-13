@@ -1,29 +1,54 @@
 from django.contrib.auth import authenticate, login, logout
+from django.http.response import HttpResponse
 from django.shortcuts import render, redirect
+
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_text, DjangoUnicodeDecodeError
+from django.core.mail import EmailMessage
 
 from django.contrib.auth.decorators import login_required
 
 from .models import MyUser
 from .forms import LoginForm, RegisterForm
+from .utils import generate_token
 
 
 def register(request):
     if request.user.is_authenticated:
             return redirect("main")
 
-    register_form = RegisterForm()
+    register_form = RegisterForm(request.POST or None)
 
     if request.method == "POST":
-
-        register_form = RegisterForm(request.POST)
         
         if register_form.is_valid():
             user = register_form.save(commit=False)
             user.is_active = False
             user.save()
+
+            # Activate account
+            current_site = get_current_site(request)
+            email_subject = "Activate your account"
+            message = render_to_string("loginSys/activate.html", 
+            {
+                "user": user,
+                "domain": current_site.domain,
+                "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                "token": generate_token.make_token(user)
+            })
+
+            email = EmailMessage(
+                subject=email_subject,
+                body=message,
+                to=[user.email],
+            )
+
+            email.send()
             
-            message = "User registered successfully, we have sent an email to confirm!"
             # Send message saying user got registered sucessfully
+            message = "User registered successfully, check your email to activate your account!"
             return redirect("login")
         else:
             context = {'register_form': register_form}
@@ -32,6 +57,26 @@ def register(request):
 
     context = {'register_form': register_form}
     return render(request, "loginSys/register.html", context=context)
+
+
+def activate_account(request, uidb64, token):
+    if request.method == "GET":
+        try:
+            # Get user id and activate account
+            uid = force_text(urlsafe_base64_decode(uidb64))
+            user = MyUser.objects.get(pk=uid)
+
+        except Exception as identifier:
+            user=None
+        
+
+        if user is not None and generate_token.check_token(user, token):
+            user.is_active = True
+            user.save()
+
+            return redirect('login')
+
+        return render(request, "loginSys/failed_activation.html", status=401)
 
 
 def _login(request):

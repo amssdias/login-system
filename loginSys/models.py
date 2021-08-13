@@ -14,4 +14,5 @@ class MyUser(AbstractUser):
 
     def save(self, *args, **kwargs):
         self.capitalize_names()
-        super(AbstractUser, self).save(*args, **kwargs)
+        self.set_password(self.password)
+        super(MyUser, self).save(*args, **kwargs)

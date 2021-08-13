@@ -31,11 +31,12 @@ class RegisterForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data            = super().clean()
-        password                = self.cleaned_data.get("password") or 1
-        password_confirmation   = self.cleaned_data.get("password_confirmation") or 2
+        password                = self.cleaned_data.get("password")
+        password_confirmation   = self.cleaned_data.get("password_confirmation")
 
-        if password != password_confirmation:
+        if password and password_confirmation and password != password_confirmation:
             raise forms.ValidationError("Passwords don't match!", code='Invalid password confirmation.')
+        return self.cleaned_data
 
     def clean_first_name(self):
         first_name = self.cleaned_data.get("first_name")
