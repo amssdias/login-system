@@ -25,6 +25,7 @@ def register(request):
         
         if register_form.is_valid():
             user = register_form.save(commit=False)
+            user.set_password(user.password)
             user.is_active = False
             user.save()
 
