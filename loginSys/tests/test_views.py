@@ -1,3 +1,7 @@
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_text
+from loginSys.utils import generate_token
+
 from django.test import TestCase, Client
 from django.urls import reverse
 from loginSys.models import MyUser
@@ -12,6 +16,14 @@ class TestViews(TestCase):
         self.user_1 = MyUser.objects.create(username='andre')
         self.user_1.set_password('dias1234567')
         self.user_1.save()
+        self.activate_account = reverse('activate_account', kwargs={
+            'uidb64': urlsafe_base64_encode(force_bytes(self.user_1.pk)),
+            'token': generate_token.make_token(self.user_1),
+        })
+        self.activate_account_false = reverse('activate_account', kwargs={
+            'uidb64': '123412',
+            'token': 'fake_token',
+        })
 
     
     def test_login_GET(self):
@@ -26,6 +38,15 @@ class TestViews(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'loginSys/register.html')
+    
+    
+    def test_activate_account_GET(self):
+        response = self.client.get(self.activate_account)
+        response_wrong = self.client.get(self.activate_account_false)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response_wrong.status_code, 401)
+        self.assertTemplateUsed(response_wrong, 'activate_email/failed_activation.html')
 
 
     # def test_main_GET(self):

@@ -32,7 +32,7 @@ def register(request):
             # Activate account
             current_site = get_current_site(request)
             email_subject = "Activate your account"
-            message = render_to_string("loginSys/activate.html", 
+            message = render_to_string("activate_email/activate.html", 
             {
                 "user": user,
                 "domain": current_site.domain,
@@ -77,7 +77,7 @@ def activate_account(request, uidb64, token):
 
             return redirect('login')
 
-        return render(request, "loginSys/failed_activation.html", status=401)
+        return render(request, "activate_email/failed_activation.html", status=401)
 
 
 def _login(request):

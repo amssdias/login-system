@@ -11,4 +11,5 @@ class CustomMyUser(UserAdmin):
             'fields': ('age',)
         }),
     )
+    ordering = ('-date_joined',)
 
