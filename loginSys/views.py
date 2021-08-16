@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
 from django.http.response import HttpResponse
 from django.shortcuts import render, redirect
 
@@ -49,7 +50,7 @@ def register(request):
             email.send()
             
             # Send message saying user got registered sucessfully
-            message = "User registered successfully, check your email to activate your account!"
+            messages.info(request, "User registered successfully, check your email to activate your account!")
             return redirect("login")
         else:
             context = {'register_form': register_form}
@@ -74,7 +75,7 @@ def activate_account(request, uidb64, token):
         if user is not None and generate_token.check_token(user, token):
             user.is_active = True
             user.save()
-
+            messages.success(request, "Your account was successfully activated, you can now log in!")
             return redirect('login')
 
         return render(request, "activate_email/failed_activation.html", status=401)
@@ -85,14 +86,12 @@ def _login(request):
     if request.user.is_authenticated:
         return redirect('main')
 
-    login_form = LoginForm(auto_id="id_for_%s", label_suffix=": ")
+    login_form = LoginForm(request.POST or None, auto_id="id_for_%s", label_suffix=": ")
+    context = {"login_form": login_form}
 
     if request.method == "POST":
 
-        login_form = LoginForm(request.POST)
-
         if login_form.is_valid():
-
             username    = login_form.cleaned_data.get('username')
             password    = login_form.cleaned_data.get('password')
             user        = authenticate(request, username=username, password=password)
@@ -101,18 +100,15 @@ def _login(request):
                 login(request, user)
                 return redirect("main")
             else:
-                context = {
-                    'login_form': login_form,
-                    'error_authentication': "Invalid username or password"
-                    }
+                messages.error(request, "Invalid username or password")
                 return render(request, "loginSys/login.html", context=context, status=401)
 
-    context = {"login_form": login_form}
     return render(request, "loginSys/login.html", context=context)
 
 
 def _logout(request):
     logout(request)
+    messages.success(request, "You have logged out, see you later!")
     return redirect("login")
 
 

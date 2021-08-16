@@ -8,6 +8,26 @@
 
     <div class="container p-5">
 
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+                    <div class="alert alert-info" role="alert">
+                        {{ message }}
+                    </div>
+                {% endif %}
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                    <div class="alert alert-success" role="alert">
+                        {{ message }}
+                    </div>
+                {% endif %}
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
 
         <form action="{% url 'login' %}" method="POST">
 
@@ -19,12 +39,6 @@
                     {{ error }}
                 </div>
             {% endfor %}
-
-            {% if error_authentication %}
-                <div class="alert alert-danger">
-                    {{ error_authentication }}
-                </div>
-            {% endif %}
             
 
             {% for field in login_form %}
