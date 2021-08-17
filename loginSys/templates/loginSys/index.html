@@ -5,10 +5,14 @@
 {% block content %}
 
     <h1 class="d-flex justify-content-center">Welcome to the website</h1>
+
+    {% include "loginSys/messages.html" %}
+
     <form action="{% url 'logout' %}" method="POST">
         {% csrf_token %}
         <button class="btn btn-primary">Logout</button>
-
     </form>
+
+    <a class="btn btn-info" href="{% url 'update_password' %}">Update password</a>
 
 {% endblock %}

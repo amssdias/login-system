@@ -106,3 +106,15 @@ def _logout(request):
 @login_required(login_url="login") # Redirect if not logged in
 def main(request):
     return render(request, "loginSys/index.html")
+
+@login_required(login_url="login")
+def update_password(request):
+    if request.method == "POST":
+        new_password = request.POST.get('new_password')
+        user = request.user
+        user.set_password(new_password)
+        user.save()
+        messages.success(request, "Password Updated")
+        return render(request, "loginSys/index.html")
+
+    return render(request, "update_password/password_update.html")
