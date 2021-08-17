@@ -13,6 +13,7 @@ class TestViews(TestCase):
         self.login_url = reverse('login')
         self.register_url = reverse('register')
         self.main = reverse('main')
+        self.error_url = 'logiin/'
         self.user_1 = MyUser.objects.create(username='andre')
         self.user_1.set_password('dias1234567')
         self.user_1.save()
@@ -88,3 +89,9 @@ class TestViews(TestCase):
             'password': 'dias1234567',
         })
         self.assertEqual(response.status_code, 302)
+
+    def test_error_url(self):
+        response = self.client.get(self.error_url)
+
+        self.assertEqual(response.status_code, 404)
+        self.assertTemplateUsed(response, '404.html')

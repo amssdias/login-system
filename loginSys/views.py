@@ -3,17 +3,14 @@ from django.contrib import messages
 from django.http.response import HttpResponse
 from django.shortcuts import render, redirect
 
-from django.contrib.sites.shortcuts import get_current_site
-from django.template.loader import render_to_string
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes, force_text, DjangoUnicodeDecodeError
-from django.core.mail import EmailMessage
+from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_text, DjangoUnicodeDecodeError
 
 from django.contrib.auth.decorators import login_required
 
 from .models import MyUser
 from .forms import LoginForm, RegisterForm
-from .utils import generate_token
+from .utils import generate_token, email_activate_account
 
 
 def register(request):
@@ -30,24 +27,7 @@ def register(request):
             user.is_active = False
             user.save()
 
-            # Activate account
-            current_site = get_current_site(request)
-            email_subject = "Activate your account"
-            message = render_to_string("activate_email/activate.html", 
-            {
-                "user": user,
-                "domain": current_site.domain,
-                "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-                "token": generate_token.make_token(user)
-            })
-
-            email = EmailMessage(
-                subject=email_subject,
-                body=message,
-                to=[user.email],
-            )
-
-            email.send()
+            email_activate_account(request, user)
             
             # Send message saying user got registered sucessfully
             messages.info(request, "User registered successfully, check your email to activate your account!")
@@ -94,6 +74,17 @@ def _login(request):
         if login_form.is_valid():
             username    = login_form.cleaned_data.get('username')
             password    = login_form.cleaned_data.get('password')
+
+            try:
+                user = MyUser.objects.get(username=username)
+                if not user.is_active:
+                    email_activate_account(request, user)
+                    messages.info(request, "User is not active, check your email for an activation link.")
+                    return render(request, "loginSys/login.html", context=context, status=403)
+            except:
+                messages.error(request, "Username doesn't exist")
+                return render(request, "loginSys/login.html", context=context, status=401)
+
             user        = authenticate(request, username=username, password=password)
 
             if user is not None:
