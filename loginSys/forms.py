@@ -3,6 +3,7 @@ from django.core import validators
 from django.core.validators import EmailValidator
 from django import forms
 from .models import MyUser
+from .validators import validate_password, validate_domain_email
 
 
 class UserPasswordResetForm(PasswordResetForm):
@@ -21,9 +22,9 @@ class RegisterForm(forms.ModelForm):
     first_name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))
     last_name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))
     username = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control'}), validators=[validate_password])
     password_confirmation = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control'}))
-    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}), validators=[validate_domain_email])
 
     class Meta:
         model = MyUser
@@ -35,7 +36,7 @@ class RegisterForm(forms.ModelForm):
         password_confirmation   = self.cleaned_data.get("password_confirmation")
 
         if password and password_confirmation and password != password_confirmation:
-            raise forms.ValidationError("Passwords don't match!", code='Invalid password confirmation.')
+            raise forms.ValidationError("Passwords don't match!", code='password_mismatch')
         return self.cleaned_data
 
     def clean_first_name(self):
@@ -58,18 +59,10 @@ class RegisterForm(forms.ModelForm):
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        if "gmail.com" not in email:
-            raise forms.ValidationError("Email must be gmail.")
         email_name = email.split("@")
-        if len(email_name) < 2:
+        if len(email_name[0]) < 2:
             raise forms.ValidationError("Email must be valid. (At least 2 characters)", code='Invalid email name.')
         return email
-
-    def clean_password(self):
-        password = self.cleaned_data.get("password")
-        if len(password) < 8:
-            raise forms.ValidationError("Password must be 8 characters minimum", code='Invalid password length.')
-        return password
 
 
 class LoginForm(forms.Form):
@@ -99,3 +92,40 @@ class LoginForm(forms.Form):
         if not password:
             raise forms.ValidationError("You should provide some password")
         return password
+
+
+class UpdatePasswordForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput(), validators=[validate_password])
+    password_1 = forms.CharField(label="Password confirmation" ,widget=forms.PasswordInput())
+
+    password.widget.attrs.update({
+        'class': 'form-control',
+        'name': 'password',
+        'placeholder': 'Password'
+    })
+    
+    password_1.widget.attrs.update({
+        'class': 'form-control',
+        'name': 'password_1',
+        'placeholder': 'Password confirmation'
+    })
+
+    class Meta:
+        model = MyUser
+        fields = ['password']
+
+    def save(self, commit=True):
+        self.instance.set_password(self.instance.password)
+        if commit:
+            self.instance.save()
+            self._save_m2m()
+        return self.instance
+
+    def clean(self):
+        cleaned_data            = super().clean()
+        password                = self.cleaned_data.get("password")
+        password_1              = self.cleaned_data.get("password_1")
+
+        if password and password_1 and password != password_1:
+            raise forms.ValidationError("Passwords don't match!", code='password_mismatch')
+        return self.cleaned_data
