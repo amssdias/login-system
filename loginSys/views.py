@@ -60,7 +60,7 @@ def activate_account(request, uidb64, token):
         return render(request, "activate_email/failed_activation.html", status=401)
 
 
-def _login(request):
+def login_user(request):
 
     if request.user.is_authenticated:
         return redirect('main')
@@ -96,7 +96,7 @@ def _login(request):
     return render(request, "loginSys/login.html", context=context)
 
 
-def _logout(request):
+def logout_user(request):
     logout(request)
     messages.success(request, "You have logged out, see you later!")
     return redirect("login")

@@ -15,3 +15,5 @@ def validate_domain_email(value):
     domain = value.split("@")[1]
     if domain not in domain_emails:
         raise ValidationError(_("Email not valid. Available domain names: 'hotmail' or 'gmail'."))
+
+    return value

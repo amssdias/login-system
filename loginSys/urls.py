@@ -4,8 +4,8 @@ from . import views
 from .forms import UserPasswordResetForm
 
 urlpatterns = [
-    path('login/', views._login, name="login"),
-    path('logout/', views._logout, name="logout"),
+    path('login/', views.login_user, name="login"),
+    path('logout/', views.logout_user, name="logout"),
     path('register/', views.register, name="register"),
     path('main/', views.main, name="main"),
     path('activate_account/<uidb64>/<token>', views.activate_account, name="activate_account"),
