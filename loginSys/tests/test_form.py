@@ -41,7 +41,7 @@ class TestForm(TransactionTestCase):
             'username': 'AndreDias',
             'password': 'diasdias',
             'password_confirmation': 'dias',
-            'email': 'andre@hotmail.com'
+            'email': 'andre@notvalid.com'
         })
 
         self.assertFalse(register_form.is_valid())
