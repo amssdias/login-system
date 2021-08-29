@@ -3,6 +3,7 @@ from loginSys.views import register
 from django.test import TransactionTestCase 
 from loginSys.forms import LoginForm, RegisterForm
 
+
 class TestForm(TransactionTestCase):
 
     def test_login_form_valid_data(self):

@@ -1,6 +1,7 @@
 from django.test import TestCase
 from loginSys.models import MyUser 
 
+
 class TestModels(TestCase):
 
     def setUp(self):

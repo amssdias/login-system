@@ -6,6 +6,7 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from loginSys.models import MyUser
 
+
 class TestViews(TestCase):
 
     def setUp(self):
@@ -26,39 +27,24 @@ class TestViews(TestCase):
             'token': 'fake_token',
         })
 
-    
     def test_login_GET(self):
         response = self.client.get(self.login_url)
-
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'loginSys/login.html')
     
-
     def test_register_GET(self):
         response = self.client.get(self.register_url)
-
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'loginSys/register.html')
-    
     
     def test_activate_account_GET(self):
         response = self.client.get(self.activate_account)
         response_wrong = self.client.get(self.activate_account_false)
-
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response_wrong.status_code, 401)
         self.assertTemplateUsed(response_wrong, 'activate_email/failed_activation.html')
 
-
-    # def test_main_GET(self):
-    #     response = self.client.get(self.main)
-    #     print(response)
-
-    #     # self.assertEquals(response.status_code, 200)
-    #     # self.assertTemplateUsed(response, 'loginSys/index.html')
-
-    def test_register_POST(self):
-        
+    def test_register_POST(self): 
         response_error = self.client.post(self.register_url, {
             'first_name': 'Elizeu',
             'last_name': 'Carlos',
@@ -69,7 +55,6 @@ class TestViews(TestCase):
         }, secure=True)
         self.assertEqual(response_error.status_code, 400)
         self.assertEqual(MyUser.objects.count(), 1)
-
         response = self.client.post(self.register_url, {
             'first_name': 'Elizeu',
             'last_name': 'Carlos',
@@ -81,9 +66,7 @@ class TestViews(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(MyUser.objects.count(), 2)
     
-    
     def test_login_POST(self):
-
         response = self.client.post(self.login_url, {
             'username': 'andre',
             'password': 'dias1234567',
@@ -92,6 +75,5 @@ class TestViews(TestCase):
 
     def test_error_url(self):
         response = self.client.get(self.error_url)
-
         self.assertEqual(response.status_code, 404)
         self.assertTemplateUsed(response, '404.html')
