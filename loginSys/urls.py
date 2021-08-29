@@ -1,14 +1,9 @@
 from django.contrib.auth import views as auth_views
-from django.urls import path
+from django.urls import path, include
 from . import views
 from .forms import UserPasswordResetForm
 
-urlpatterns = [
-    path('login/', views.login_user, name="login"),
-    path('logout/', views.logout_user, name="logout"),
-    path('register/', views.register, name="register"),
-    path('main/', views.main, name="main"),
-    path('activate_account/<uidb64>/<token>', views.activate_account, name="activate_account"),
+password_reset_patterns = [
     path('update_password/', views.update_password, name="update_password"),
 
     # Link to confirm email to reset
@@ -22,4 +17,17 @@ urlpatterns = [
 
     # Password reset completed
     path('password_reset_complete', auth_views.PasswordResetCompleteView.as_view(template_name="password_reset/password_reset_complete.html"), name='password_reset_complete')
+]
+
+authentication_patterns = [
+    path('login/', views.login_user, name="login"),
+    path('logout/', views.logout_user, name="logout"),
+    path('register/', views.register, name="register"),
+    path('activate_account/<uidb64>/<token>', views.activate_account, name="activate_account"),
+]
+
+urlpatterns = [
+    path('auth/', include(authentication_patterns)),
+    path('password/', include(password_reset_patterns)),
+    path('main/', views.main, name="main"),
 ]
