@@ -81,3 +81,14 @@ python manage.py runserver
 
 Paste this link on your browser:
 **http://127.0.0.1:8000/auth/login**
+
+
+## Features
+
+- Log in
+	- Via username and password
+- Create an account
+- Profile activation email
+- Reset password
+- Resend and activation link
+- Change password
