@@ -28,7 +28,21 @@ A basic template of a login system so you can use the template in any web app wi
 
 ### Installation
 
-1. Download Pipenv through the terminal window ***(make sure you have [Python][python-download] installed)***:
+#### Clone the project
+
+```
+git clone https://github.com/amssdias/login-system
+cd login-system
+```
+
+#### Configure settings(email)
+
+Must fill the ".env_sample_file" file, so users can receive activation links and to reset passwords.
+
+
+#### Install dependencies & activate virtualenv
+
+1. Pipenv ***(make sure you have [Python][python-download] installed)***:
 
 	```python
      pip install pipenv  # For Windows
@@ -38,18 +52,19 @@ A basic template of a login system so you can use the template in any web app wi
 
     ```
     
-2. After installing pipenv, download the files and in the terminal window, go to the project directory which contain the **Pipfile** and **Pipfile.lock** and run:
+2. Install packages:
 
 	```python
-    pipenv install
+    pipenv install # will create a virtual environment with all the modules needed
     ```
-    This will create a virtual environment with all the modules needed.
 
-3. We must have this virtual environment activated to run our program, through the terminal window:
+3. Activate virtualenv and apply migrations:
 
 	```python
-    pipenv shell # To run the virtual environment
-    exit         # To close the virtual environment
+    pipenv shell # To activate the virtual environment
+
+    python manage.py makemigrations
+    python manage.py migrate
     ```
 
 If any doubts here's a link to some more explanations: [Pipenv](https://pipenv-fork.readthedocs.io/en/latest/basics.html)
@@ -58,7 +73,6 @@ If any doubts here's a link to some more explanations: [Pipenv](https://pipenv-f
 
 ## :mag_right: Usage
 
-On your terminal window, go to the project directory with the Pip files and type: 
 
 ```python
 pipenv shell
