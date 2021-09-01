@@ -4,43 +4,46 @@
 
 {% block content %}
 
-    <h1 class="d-flex justify-content-center p-5">Login here</h1>
 
-    <div class="container p-5">
+<div class="form-layout container px-5 py-3 mt-5">
+    <h1 class="title d-flex justify-content-center p-5">Login</h1>
 
-        {% include "loginSys/messages.html" %}
+    {% include "loginSys/messages.html" %}
 
-        <form action="{% url 'login' %}" method="POST">
+    <form class="d-flex flex-column" action="{% url 'login' %}" method="POST">
 
-            {% csrf_token %}
+        {% csrf_token %}
 
-            {% for error in login_form.non_field_errors %}
-                <!-- Form errors -->
-                <div class="alert alert-danger">
-                    {{ error }}
-                </div>
-            {% endfor %}
-            
+        {% for error in login_form.non_field_errors %}
+        <!-- Form errors -->
+        <div class="alert alert-danger">
+            {{ error }}
+        </div>
+        {% endfor %}
 
-            {% for field in login_form %}
-                <div class="mb-3">
-                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                    {{ field }}
-                    {% if field.errors %}
-                        <div class="alert alert-danger">
-                            {{ field.errors }}
-                        </div>
-                    {% endif %}
-                </div>
-            {% endfor %}
-            
-            
-            <button type="submit" class="btn btn-primary">Login</button>
-            <a class="ml-4" href="{% url 'password_reset' %}">Forgot password</a>
-        </form>
 
-        <a href="{% url 'register' %}" class="btn btn-warning mt-5">Register</a>
+        {% for field in login_form %}
+        <div class="mb-3">
+            <!-- <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label> -->
+            {{ field }}
+            {% if field.errors %}
+            <div class="alert alert-danger">
+                {{ field.errors }}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
 
+
+        <button type="submit" class="form-btn btn btn-primary">Login</button>
+    </form>
+
+    <div class="links mt-5">
+        <a class="btn btn-warning link ml-4" href="{% url 'password_reset' %}">Forgot password</a>
     </div>
+
+    <!-- <a href="{% url 'register' %}" class="btn btn-warning mt-5">Register</a> -->
+
+</div>
 
 {% endblock %}

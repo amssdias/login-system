@@ -4,42 +4,43 @@
 
 {% block content %}
 
-    <h1 class="d-flex justify-content-center p-5">Register here</h1>
 
-    <div class="container pt-5">
+<div class="form-layout container px-5 py-3 mt-5">
+  <h1 class="title d-flex justify-content-center p-5">Register here</h1>
 
-        <form action="{% url 'register' %}" method="POST" class="row g-3">
-          {% csrf_token %}
-          
-          {% for error in register_form.non_field_errors %}
-            
-          <div class="alert alert-danger" role="alert">
-            {{ error }}
-          </div>
-            
-    
-          {% endfor %}
-    
-           
-          {% for field in register_form %}
-            <div class="mb-3">
-              {{ field.label_tag }}
-              {{ field }}
+  <form action="{% url 'register' %}" method="POST" class="row g-3">
+    {% csrf_token %}
 
-              {% if field.errors %}
-                <div class="alert alert-danger">
-                  {{ field.errors }}
-                </div>
-              {% endif %}
-            </div>
-          {% endfor %}
-    
-            
-    
-          <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-    
-        <a href="{% url 'login' %}" class="btn btn-warning mt-5">Login</a>
+    {% for error in register_form.non_field_errors %}
+
+    <div class="alert alert-danger" role="alert">
+      {{ error }}
+    </div>
+
+
+    {% endfor %}
+
+
+    {% for field in register_form %}
+    <div class="mb-3">
+      <label for="{{ field.id_for_label }}" class="form-label__register">{{ field.label }}</label>
+      {{ field }}
+
+      {% if field.errors %}
+      <div class="alert alert-danger">
+        {{ field.errors }}
       </div>
+      {% endif %}
+    </div>
+    {% endfor %}
+
+
+
+    <button type="submit" class="form-btn btn btn-primary">Submit</button>
+  </form>
+  <div class="links">
+    <a href="{% url 'login' %}" class="link btn btn-warning mt-5">Login</a>
+  </div>
+</div>
 
 {% endblock %}

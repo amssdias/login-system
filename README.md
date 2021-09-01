@@ -5,11 +5,11 @@
 ![Python Badge](https://img.shields.io/badge/Django-3.2.4-092E20?logo=django)
 
 
-# Login System Template
+<h1 align=center>Login System Template</h1>
 
-<!-- <p align="center">
-    <img src="media/website.png" width="900px">
-</p> -->
+<p align="center">
+    <img src="readme_media/login.png" width="850px">
+</p>
 
 A basic template of a login system so you can use the template in any web app with just minimal changes to quickly build the web apps. Nowadays every website requires their customers to create accounts therefore this template will be very useful.
 
@@ -90,5 +90,5 @@ Paste this link on your browser:
 - Create an account
 - Profile activation email
 - Reset password
-- Resend and activation link
+- Resend an activation link
 - Change password
