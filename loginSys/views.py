@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib import messages
 from django.http.response import HttpResponse
 from django.shortcuts import render, redirect
@@ -102,7 +102,6 @@ def logout_user(request):
     return redirect("login")
 
 
-@login_required(login_url="login") # Redirect if not logged in
 def main(request):
     return render(request, "loginSys/index.html")
 
@@ -115,7 +114,10 @@ def update_password(request):
     if request.method == "POST":
         if form.is_valid():
             form.save()
+
+            # Prevent logging out user session
+            update_session_auth_hash(request, request.user)
             messages.success(request, "Password Updated")
-            return render(request, "loginSys/index.html")
+            return redirect("main")
 
     return render(request, "update_password/password_update.html", context={'update_password_form': form})

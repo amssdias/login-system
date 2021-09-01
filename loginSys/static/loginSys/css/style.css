@@ -1,0 +1,58 @@
+* {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+body {
+    background-image: 
+        linear-gradient(to bottom, #ffffff70, #ffffff70),
+        url("../img/back-1jpg.jpg");
+    background-position: center;
+}
+
+/* Login Form */
+
+.title {
+    font-weight: 100;
+    font-size: 45px;
+}
+
+.form-label__register {
+    display: flex;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 100;
+    width: 60%;
+    margin: 0 auto;
+    background-image: linear-gradient(to bottom, 
+    rgb(255, 255, 255, 0.4), 
+    rgb(255, 255, 255, 0.7));
+    border-radius: 20px 20px 0px 0px ;
+}
+
+.alert {
+    width: 60%;
+    margin: 1rem auto;
+}
+
+.form-btn {
+    width: 60%;
+    margin: 0 auto;
+    display: block;
+}
+
+.form-control {
+    width: 60%;
+    margin: 0 auto;
+}
+
+.form-layout {
+    background-image: linear-gradient(to bottom, 
+    rgb(255, 255, 255, 0.5), 
+    rgb(255, 255, 255, 0.5));
+    border: 5px solid white;
+}
+
+.links {
+    display: flex;
+    justify-content: flex-end;
+}

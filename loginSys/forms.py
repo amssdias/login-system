@@ -101,7 +101,7 @@ class UpdatePasswordForm(forms.ModelForm):
     password.widget.attrs.update({
         'class': 'form-control',
         'name': 'password',
-        'placeholder': 'Password'
+        'placeholder': 'New Password'
     })
     
     password_1.widget.attrs.update({
