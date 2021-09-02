@@ -1,7 +1,6 @@
-from logging import log
-from loginSys.views import register
-from django.test import TransactionTestCase 
 from loginSys.forms import LoginForm, RegisterForm
+from django.test import TransactionTestCase 
+from loginSys.views import RegisterUser
 
 
 class TestForm(TransactionTestCase):

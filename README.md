@@ -37,7 +37,7 @@ cd login-system
 
 #### Configure settings(email)
 
-Must fill the ".env_sample_file" file, so users can receive activation links and to reset passwords.
+Fill up the ".env_sample_file" file, so users can receive activation links and to reset passwords. Rename it as well to ".env".
 
 
 #### Install dependencies & activate virtualenv
