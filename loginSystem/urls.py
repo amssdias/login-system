@@ -22,5 +22,6 @@ urlpatterns = [
     path('', include('loginSys.urls'))
 ]
 
+handler400 = "helpers.views.handle_bad_request"
 handler404 = "helpers.views.handle_not_found"
 handler500 = "helpers.views.handle_server_error"

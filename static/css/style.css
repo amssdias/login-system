@@ -5,7 +5,7 @@
 body {
     background-image: 
         linear-gradient(to bottom, #ffffff70, #ffffff70),
-        url("../img/back-1jpg.jpg");
+        url("/static/img/back-1jpg.jpg");
     background-position: center;
 }
 
