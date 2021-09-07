@@ -76,4 +76,4 @@ class TestViews(TestCase):
     def test_error_url(self):
         response = self.client.get(self.error_url)
         self.assertEqual(response.status_code, 404)
-        self.assertTemplateUsed(response, '404.html')
+        self.assertTemplateUsed(response, 'errors/404.html')
