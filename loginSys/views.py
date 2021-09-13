@@ -99,7 +99,7 @@ class LoginUser(View):
 
 
 class LogoutUser(View):
-    def post(self, request):
+    def get(self, request):
         logout(request)
         messages.success(request, "You have logged out, see you later!")
         return redirect("login")
