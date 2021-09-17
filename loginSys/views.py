@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -9,6 +11,14 @@ from django.views import View
 from loginSys.models import MyUser
 from loginSys.forms import LoginForm, RegisterForm, UpdatePasswordForm
 from loginSys.utils import generate_token, email_activate_account
+
+logging.basicConfig(
+    format='%(asctime)s %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
+    level=logging.DEBUG,
+    filename='logs.txt'
+)
+
+logger = logging.getLogger('Login System Logger')
 
 
 class RegisterUser(View):
@@ -31,7 +41,7 @@ class RegisterUser(View):
             user.save()
 
             email_activate_account(request, user)
-            
+            logger.info(f'User: {user.username} got registered')
             messages.info(request, "User registered successfully, check your email to activate your account!")
             return redirect("login")
         else:
@@ -49,6 +59,7 @@ class ActivateAccount(View):
             user = MyUser.objects.get(pk=uid)
 
         except Exception as identifier:
+            logger.critical(f'User tryed to activate account but failed.')
             user=None
         
 
@@ -91,6 +102,7 @@ class LoginUser(View):
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
+            logger.info(f'User: {user.username} logged in.')
             login(request, user)
             return redirect("main")
         else:
@@ -99,7 +111,8 @@ class LoginUser(View):
 
 
 class LogoutUser(View):
-    def get(self, request):
+    def post(self, request):
+        logger.info(f'User: {request.user.username} logged out.')
         logout(request)
         messages.success(request, "You have logged out, see you later!")
         return redirect("login")
