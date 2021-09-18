@@ -1,9 +1,19 @@
+import logging
+
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
+
+logging.basicConfig(
+    format='%(asctime)s %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
+    level=logging.DEBUG,
+    filename='logs.txt'
+)
+
+logger = logging.getLogger('Login System Logger')
 
 class TokenGenerator(PasswordResetTokenGenerator):
     pass

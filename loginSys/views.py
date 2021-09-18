@@ -1,5 +1,3 @@
-import logging
-
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -10,15 +8,7 @@ from django.views import View
 
 from loginSys.models import MyUser
 from loginSys.forms import LoginForm, RegisterForm, UpdatePasswordForm
-from loginSys.utils import generate_token, email_activate_account
-
-logging.basicConfig(
-    format='%(asctime)s %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
-    level=logging.DEBUG,
-    filename='logs.txt'
-)
-
-logger = logging.getLogger('Login System Logger')
+from loginSys.utils import generate_token, email_activate_account, logger
 
 
 class RegisterUser(View):
