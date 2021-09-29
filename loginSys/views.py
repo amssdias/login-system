@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_text
@@ -80,12 +81,12 @@ class LoginUser(View):
             password    = form.cleaned_data.get('password')
 
         try:
-            user = MyUser.objects.get(username=username)
+            user = MyUser.objects.filter(Q(username=username) | Q(email=username)).first()
             if not user.is_active:
                 email_activate_account(request, user)
                 messages.info(request, "User is not active, check your email for an activation link.")
                 return render(request, self.template_name, context=self.context, status=403)
-        except:
+        except MyUser.DoesNotExist:
             messages.error(request, "Username doesn't exist")
             return render(request, self.template_name, context=self.context, status=401)
 
