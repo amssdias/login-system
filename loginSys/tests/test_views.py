@@ -41,7 +41,7 @@ class TestViews(TestCase):
         response = self.client.get(self.activate_account)
         response_wrong = self.client.get(self.activate_account_false)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response_wrong.status_code, 401)
+        self.assertEqual(response_wrong.status_code, 400)
         self.assertTemplateUsed(response_wrong, 'activate_email/failed_activation.html')
 
     def test_register_POST(self): 

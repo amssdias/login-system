@@ -86,7 +86,7 @@ class LoginUser(View):
             password    = form.cleaned_data.get('password')
 
         try:
-            user = MyUser.objects.get(Q(username=username) | Q(email=username)).first()
+            user = MyUser.objects.get(Q(username=username) | Q(email=username))
             if not user.is_active:
                 email_activate_account(request, user)
                 messages.info(request, "User is not active, check your email for an activation link.")
