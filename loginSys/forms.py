@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator
 from django import forms
 from django.forms.widgets import Widget
-from django.utils.translation import gettext, gettext_lazy as _
+from django.utils.translation import gettext as _
 
 
 from .models import MyUser

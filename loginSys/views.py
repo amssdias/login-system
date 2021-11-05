@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_text
 from django.views import View
+from django.http import HttpResponseBadRequest
 
 from loginSys.models import MyUser
 from loginSys.forms import LoginForm, RegisterForm, UpdatePasswordForm
@@ -31,7 +32,12 @@ class RegisterUser(View):
             user.is_active = False
             user.save()
 
-            email_activate_account(request, user)
+            try:
+                email_activate_account(request, user)
+            except Exception as e:
+                messages.error(request, e)
+                context = {'register_form': form}
+                return render(request, self.template_name, context=context, status=400)
             logger.info(f'User: {user.username} got registered')
             messages.info(request, "User registered successfully, check your email to activate your account!")
             return redirect("login")
@@ -53,14 +59,13 @@ class ActivateAccount(View):
             logger.critical(f'User tryed to activate account but failed.')
             user=None
         
-
         if user is not None and generate_token.check_token(user, token):
             user.is_active = True
             user.save()
             messages.success(request, "Your account was successfully activated, you can now log in!")
             return redirect('login')
 
-        return render(request, self.template_name, status=401)
+        return render(request, self.template_name, status=400)
 
 
 class LoginUser(View):
@@ -81,14 +86,14 @@ class LoginUser(View):
             password    = form.cleaned_data.get('password')
 
         try:
-            user = MyUser.objects.filter(Q(username=username) | Q(email=username)).first()
+            user = MyUser.objects.get(Q(username=username) | Q(email=username)).first()
             if not user.is_active:
                 email_activate_account(request, user)
                 messages.info(request, "User is not active, check your email for an activation link.")
                 return render(request, self.template_name, context=self.context, status=403)
         except MyUser.DoesNotExist:
             messages.error(request, "Username doesn't exist")
-            return render(request, self.template_name, context=self.context, status=401)
+            return render(request, self.template_name, context=self.context, status=404)
 
         user = authenticate(request, username=username, password=password)
 

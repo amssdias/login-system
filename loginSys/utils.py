@@ -2,10 +2,14 @@ import logging
 
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.contrib.sites.shortcuts import get_current_site
+from django.core.exceptions import ValidationError
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
+from django.utils.translation import gettext as _
+
+from smtplib import SMTPException
 
 logging.basicConfig(
     format='%(asctime)s %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
@@ -40,5 +44,7 @@ def email_activate_account(request, user):
         body=message,
         to=[user.email],
     )
-
-    email.send()
+    try:
+        email.send()
+    except SMTPException:
+        raise ValidationError(_("Email wasn't sent."))
